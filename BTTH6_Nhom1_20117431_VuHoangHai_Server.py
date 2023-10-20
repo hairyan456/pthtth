@@ -12,6 +12,7 @@
 #   CHọn dịch vụ do Server cấp qua menu
 #   Hiển thị kết quả Server trả về
 import socket
+import os
 
 # Tạo socket server
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,10 +34,10 @@ client_socket, client_address = server_socket.accept()
 print(f"Kết nối từ: {client_address}")
 
 
-def calSum():
+def calSum(file_name):
     s = ""
     import numpy as np
-    with open('data5.txt') as f:
+    with open(file_name) as f:
         for line in f:
             i = 1
             c = line.strip().split(' ')
@@ -49,10 +50,10 @@ def calSum():
     return s.strip()
 
 
-def calMultiple():
+def calMultiple(file_name):
     import numpy as np
     s = ""
-    with open('data5.txt') as f:
+    with open(file_name) as f:
         for line in f:
             i = 1
             c = line.strip().split(' ')
@@ -66,6 +67,7 @@ def calMultiple():
 
 
 while True:
+    file_name = client_socket.recv(1024).decode()
     option_str = f"\n1.     Tổng\n" + \
         f"2.     Tích\n" + f"3.     Thoát\n"
     client_socket.send(option_str.upper().encode())
@@ -73,9 +75,9 @@ while True:
     if option == "3":
         break
     elif option == "1":
-        client_socket.send(calSum().encode())
+        client_socket.send(calSum(file_name).encode())
     elif option == "2":
-        client_socket.send(calMultiple().encode())
+        client_socket.send(calMultiple(file_name).encode())
 
 # Đóng kết nối
 client_socket.close()
